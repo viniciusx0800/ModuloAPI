@@ -17,5 +17,6 @@ namespace ModuloAPI.Context
         }
 
         public DbSet<Contato> Contatos { get; set; }
+
     }
 }
