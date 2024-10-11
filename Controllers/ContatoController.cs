@@ -26,7 +26,7 @@ namespace ModuloAPI.Controllers
         {
             _context.Add(contato);
             _context.SaveChanges();
-            return Ok(contato);
+            return CreatedAtAction(nameof(ObterPorId), new {id = contato.Id }, contato);
         }
 
         [HttpGet("{id}")]
@@ -39,6 +39,15 @@ namespace ModuloAPI.Controllers
 
             return Ok(contato);
         }
+        
+        [HttpGet("Obter Contato por Nome")]
+        public IActionResult ObterPorNome(string nome)
+        {
+            var contatos = _context.Contatos.Where(x => x.Nome.Contains(nome));
+            return Ok(contatos);
+        }
+
+
 
         [HttpPut("{id}")]
         public IActionResult Atualizar(int id, Contato contato)
@@ -56,6 +65,27 @@ namespace ModuloAPI.Controllers
             _context.SaveChanges();
 
             return Ok(contatoBanco);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Deletar(int id)
+        {
+            var deletarContato = _context.Contatos.Find(id);
+
+            if(deletarContato == null)
+                return NotFound();
+
+            // _context.Contatos.Remove(deletarContato);
+            // _context.SaveChanges();
+            // return NoContent();
+
+            deletarContato.Ativo = false;
+
+            _context.Contatos.Update(deletarContato);
+            _context.SaveChanges();
+
+            return Ok("Deletado com sucesso!");
+
         }
     }
 }
